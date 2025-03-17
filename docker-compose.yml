@@ -1,11 +1,18 @@
 ﻿services:
   mydockerapp.api:
     image: ${DOCKER_REGISTRY-}mydockerappapi
+    depends_on:
+      - mydockerapp.database
     container_name: mydockerapp.api
     build:
       context: .
       dockerfile: MyDockerApp.Api/Dockerfile        
-   
+    develop:
+     watch:
+      - action: sync
+        path: .
+        target: /src
+
   frontend:
     build:
       context: ./Frontend  # Path to the Nuxt.js frontend folder
