@@ -1,0 +1,36 @@
+﻿services:
+  mydockerapp.api:
+    image: ${DOCKER_REGISTRY-}mydockerappapi
+    container_name: mydockerapp.api
+    build:
+      context: .
+      dockerfile: MyDockerApp.Api/Dockerfile        
+   
+  frontend:
+    build:
+      context: ./Frontend  # Path to the Nuxt.js frontend folder
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    depends_on:
+      - mydockerapp.api       
+    volumes:
+      - ./Frontend:/usr/src/app:/usr/src/app/node_modules  # map local files
+    
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # ✅ Forces Nuxt to watch files
+      
+  mydockerapp.database: 
+    image: postgres:latest
+    container_name: mydockerapp.database
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: mydockerapp
+    volumes:
+     - ./.containers/mydockerapp-db:/var/lib/postgresql/data  
+    ports:
+     - 5432:5432
+  
+  
+  
