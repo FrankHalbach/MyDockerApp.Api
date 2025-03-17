@@ -33,7 +33,7 @@ public class PersonController : ControllerBase
 
     // POST: api/person
     [HttpPost]
-    public async Task<IActionResult> CreatePerson([FromBody] Person person)
+    public async Task<IActionResult> CreatePerson([FromBody] PersonCreateCommand person)
     {
         if (person == null)
         {
@@ -41,12 +41,13 @@ public class PersonController : ControllerBase
         }
 
         using var session = _store.LightweightSession();
-               
+                
+        var newPerson = Person.Create(person.Name, person.Age);
 
-        session.Store(person);
+        session.Store(newPerson);
         await session.SaveChangesAsync();  // Persist to the database
 
-        return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, person);
+        return CreatedAtAction(nameof(GetPerson), new { id = newPerson.Id }, newPerson);
     }
 
     // DELETE: api/person/{id}
@@ -81,5 +82,9 @@ public class PersonController : ControllerBase
 
 }
 
- 
-public record Person(Guid Id, string Name, int Age);
+public record PersonCreateCommand(string Name, int Age);
+public record Person(Guid Id, string Name, int Age)
+{
+    public static Person Create(string Name, int Age)=> new(Guid.NewGuid(),Name, Age);
+    
+};
