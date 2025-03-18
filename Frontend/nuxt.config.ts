@@ -2,11 +2,17 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true }, 
-  modules: [    
+  modules: [        
     // '@nuxt/fonts',
     // '@nuxt/icon',
     // '@nuxt/image',
     // '@nuxt/eslint',
     // '@nuxt/content'
-    ],  
+    ],      
+   // Proxy configuration    
+  runtimeConfig: {
+    public: {        
+      baseURL: 'https://localhost:8081/api/'        
+    },
+  },  
 })

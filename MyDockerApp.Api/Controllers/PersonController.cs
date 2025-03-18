@@ -41,13 +41,36 @@ public class PersonController : ControllerBase
         }
 
         using var session = _store.LightweightSession();
-                
+
         var newPerson = Person.Create(person.Name, person.Age);
 
         session.Store(newPerson);
         await session.SaveChangesAsync();  // Persist to the database
 
         return CreatedAtAction(nameof(GetPerson), new { id = newPerson.Id }, newPerson);
+    }
+
+    // PUT: api/person
+    [HttpPut("{id}")]    
+    public async Task<IActionResult> UpdatePerson(Guid id, PersonCreateCommand updatedPerson)
+    {
+       
+
+        using var session = _store.LightweightSession();
+
+        var person = await session.LoadAsync<Person>(id);
+
+        if (person == null)
+        {
+            return NotFound();
+        }
+
+        var update = person.Update(updatedPerson.Name, updatedPerson.Age);
+        
+        session.Store(update);
+        await session.SaveChangesAsync();  // Persist to the database
+
+        return Ok();
     }
 
     // DELETE: api/person/{id}
@@ -86,5 +109,5 @@ public record PersonCreateCommand(string Name, int Age);
 public record Person(Guid Id, string Name, int Age)
 {
     public static Person Create(string Name, int Age)=> new(Guid.NewGuid(),Name, Age);
-    
+    public Person Update(string Name, int Age) => this with { Age = Age, Name = Name };
 };
