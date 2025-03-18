@@ -2,6 +2,7 @@ using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -9,6 +10,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy
+                          .WithOrigins("http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowCredentials();
+                      });
+});
 // Add Marten
 builder.Services.AddMarten(options =>
 {
@@ -27,6 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 
@@ -35,3 +48,20 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(MyAllowSpecificOrigins,
+//    builder =>
+//    {
+//        builder
+//        .WithOrigins("http://localhost:3000", "https://localhost:44306")
+//        .AllowAnyMethod()
+//        .AllowAnyHeader()
+//        .AllowCredentials()
+//        ;
+
+//    });
+//});
