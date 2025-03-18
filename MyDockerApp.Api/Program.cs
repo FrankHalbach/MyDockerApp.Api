@@ -18,7 +18,8 @@ builder.Services.AddCors(options =>
                           policy
                           .WithOrigins("http://localhost:3000")
                           .AllowAnyHeader()
-                          .AllowCredentials();
+                          .AllowCredentials()
+                          .AllowAnyMethod();
                       });
 });
 // Add Marten
@@ -49,19 +50,3 @@ app.MapControllers();
 
 app.Run();
 
-
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(MyAllowSpecificOrigins,
-//    builder =>
-//    {
-//        builder
-//        .WithOrigins("http://localhost:3000", "https://localhost:44306")
-//        .AllowAnyMethod()
-//        .AllowAnyHeader()
-//        .AllowCredentials()
-//        ;
-
-//    });
-//});
