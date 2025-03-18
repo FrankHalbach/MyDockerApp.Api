@@ -4,15 +4,14 @@
     depends_on:
       - mydockerapp.database
     container_name: mydockerapp.api
-    build:
-      context: .
-      dockerfile: MyDockerApp.Api/Dockerfile        
-    develop:
-     watch:
-      - action: sync
-        path: .
-        target: /src
-
+    
+    ports:
+    - "8080:8080"
+    - "8081:8081"
+    build: 
+       context: .
+       dockerfile: MyDockerApp.Api/Dockerfile       
+    
   frontend:
     build:
       context: ./Frontend  # Path to the Nuxt.js frontend folder

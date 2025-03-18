@@ -1,4 +1,4 @@
-@MyDockerApp.Api_HostAddress = https://localhost:58772/api
+@MyDockerApp.Api_HostAddress = https://localhost:8081/api
 
 GET {{MyDockerApp.Api_HostAddress}}/Person/
 Accept: application/json
